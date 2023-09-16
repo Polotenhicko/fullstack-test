@@ -4,7 +4,10 @@ import { isDevelopment } from '../constants/api';
 const dialectOptions = isDevelopment
   ? undefined
   : {
-      ssl: 'require',
+      ssl: {
+        require: true,
+        rejectUnauthorized: false, // На практике это не рекомендуется, лучше настроить сервер PostgreSQL правильно
+      },
       sslmode: 'require',
     };
 
