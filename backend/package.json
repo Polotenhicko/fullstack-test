@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node ./lib/backend/index.js",
+    "start": "node ./lib/backend/src/index.js",
     "dev": "set NODE_ENV=development&& nodemon src/index.ts"
   },
   "engines": {
