@@ -1,5 +1,12 @@
 import { Options } from 'sequelize';
-const { Pool } = require('pg');
+import { isDevelopment } from '../constants/api';
+
+const dialectOptions = isDevelopment
+  ? undefined
+  : {
+      ssl: 'require',
+      sslmode: 'require',
+    };
 
 export const dbConfig: Options = {
   host: process.env.DB_HOST,
@@ -7,9 +14,5 @@ export const dbConfig: Options = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DB,
   dialect: 'postgres',
-  dialectOptions: {
-    ssl: {
-      require: true,
-    },
-  },
+  dialectOptions,
 };
