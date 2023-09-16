@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc",
+    "start": "node ./lib/index.js",
     "dev": "set NODE_ENV=development&& nodemon src/index.ts"
   },
   "engines": {
