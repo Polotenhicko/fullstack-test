@@ -5,7 +5,10 @@ const api_1 = require("../constants/api");
 const dialectOptions = api_1.isDevelopment
     ? undefined
     : {
-        ssl: 'require',
+        ssl: {
+            require: true,
+            rejectUnauthorized: false, // На практике это не рекомендуется, лучше настроить сервер PostgreSQL правильно
+        },
         sslmode: 'require',
     };
 exports.dbConfig = {
