@@ -1,4 +1,5 @@
 import { Options } from 'sequelize';
+const { Pool } = require('pg');
 
 export const dbConfig: Options = {
   host: process.env.DB_HOST,
@@ -6,5 +7,9 @@ export const dbConfig: Options = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DB,
   dialect: 'postgres',
-  ssl: true,
+  dialectOptions: {
+    ssl: {
+      require: true,
+    },
+  },
 };
