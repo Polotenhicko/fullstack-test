@@ -6,4 +6,5 @@ export const dbConfig: Options = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DB,
   dialect: 'postgres',
+  ssl: true,
 };
