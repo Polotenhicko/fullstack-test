@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-require("dotenv").config({ path: `.env.${process.env.NODE_ENV}.local` });
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV}.local` });
 const express = require("express");
 const cors = require("cors");
 const routes_1 = require("./routes");

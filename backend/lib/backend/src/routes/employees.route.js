@@ -6,5 +6,5 @@ const controllers_1 = require("../controllers");
 const employeesRouter = express.Router();
 exports.employeesRouter = employeesRouter;
 const employeesController = new controllers_1.EmployeesController();
-employeesRouter.get("/employees", employeesController.findAll);
+employeesRouter.get('/employees', employeesController.findAll);
 //# sourceMappingURL=employees.route.js.map
