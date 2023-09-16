@@ -1,8 +1,8 @@
-import { configureStore } from "@reduxjs/toolkit";
-import employeesReducer from "./slices/employeesSlice";
-import departmentReducer from "./slices/departmentSlice";
-import thunk from "redux-thunk";
-import { useDispatch } from "react-redux";
+import { configureStore } from '@reduxjs/toolkit';
+import employeesReducer from './slices/employeesSlice';
+import departmentReducer from './slices/departmentSlice';
+import thunk from 'redux-thunk';
+import { useDispatch } from 'react-redux';
 
 export const store = configureStore({
   reducer: {

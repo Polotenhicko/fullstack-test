@@ -1,4 +1,4 @@
-import { API_URL } from "../constants/api";
+import { API_URL } from '../constants/api';
 
 interface IFetchServiceConstructor {
   body?: object;
@@ -48,7 +48,7 @@ export class FetchService {
       requestBody = JSON.stringify(body);
     }
 
-    const contentType = requestBody && "application/json";
+    const contentType = requestBody && 'application/json';
     const headers = this.buildHeaders({ contentType });
 
     return new Request(url, {
@@ -59,15 +59,15 @@ export class FetchService {
     });
   }
 
-  private buildURL(routeInfo: IFetchServiceConstructor["routeInfo"]): URL {
-    if (!API_URL) throw new Error("Does not have API_URL!");
+  private buildURL(routeInfo: IFetchServiceConstructor['routeInfo']): URL {
+    if (!API_URL) throw new Error('Does not have API_URL!');
 
     const url = new URL(API_URL);
     url.pathname = routeInfo.route;
 
     for (const key in routeInfo.params) {
       const param = routeInfo.params[key];
-      url.pathname += param + "/";
+      url.pathname += param + '/';
     }
 
     for (const key in routeInfo.searchParams) {
@@ -82,7 +82,7 @@ export class FetchService {
     const headers = new Headers();
 
     if (contentType) {
-      headers.set("Content-Type", contentType);
+      headers.set('Content-Type', contentType);
     }
 
     return headers;

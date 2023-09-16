@@ -1,9 +1,9 @@
-require("dotenv").config({ path: `.env.${process.env.NODE_ENV}.local` });
-import * as express from "express";
-import * as cors from "cors";
-import { employeesRouter } from "./routes";
-import { port } from "./constants/api";
-import { corsConfig } from "./config/cors.config";
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV}.local` });
+import * as express from 'express';
+import * as cors from 'cors';
+import { employeesRouter } from './routes';
+import { port } from './constants/api';
+import { corsConfig } from './config/cors.config';
 
 const app = express();
 

@@ -1,9 +1,9 @@
-import { DataTypes } from "sequelize";
-import { sequelize } from "./dbConnect";
-import { Employees } from "./employees.models";
+import { DataTypes } from 'sequelize';
+import { sequelize } from './dbConnect';
+import { Employees } from './employees.models';
 
 export const Departments = sequelize.define(
-  "Department",
+  'Department',
   {
     department_id: {
       type: DataTypes.INTEGER,
@@ -25,7 +25,7 @@ export const Departments = sequelize.define(
     },
   },
   {
-    tableName: "departments", // Указываем имя таблицы
+    tableName: 'departments', // Указываем имя таблицы
     timestamps: false, // Если не нужно хранить временные метки создания и обновления
-  }
+  },
 );
