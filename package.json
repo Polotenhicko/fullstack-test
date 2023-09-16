@@ -1,5 +1,6 @@
 {
   "name": "fullstack-test",
+  "homepage": "https://polotenhicko.github.io/fullstack-test/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -30,7 +31,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "dev": "concurrently \"npm start\" \"cd ./backend && npm run dev\"",
-    "component": "node ./scripts/createComponentPattern.js"
+    "component": "node ./scripts/createComponentPattern.js",
+    "deploy": "npm run build && gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -51,6 +53,7 @@
     ]
   },
   "devDependencies": {
-    "concurrently": "^8.2.1"
+    "concurrently": "^8.2.1",
+    "gh-pages": "^6.0.0"
   }
 }
