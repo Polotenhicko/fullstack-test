@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/message-template-editor/static/css/main.232bda83.css",
+    "main.js": "/message-template-editor/static/js/main.7d0f3c1a.js",
+    "index.html": "/message-template-editor/index.html",
+    "main.232bda83.css.map": "/message-template-editor/static/css/main.232bda83.css.map",
+    "main.7d0f3c1a.js.map": "/message-template-editor/static/js/main.7d0f3c1a.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.232bda83.css",
+    "static/js/main.7d0f3c1a.js"
+  ]
+}
