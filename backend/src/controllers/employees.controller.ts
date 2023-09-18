@@ -5,7 +5,28 @@ import { Employees } from '../models';
 import { QueryTypes } from 'sequelize';
 
 export class EmployeesController {
-  create = (req: Request, res: Response) => {};
+  create = async (req: Request, res: Response) => {
+    try {
+      const { employeeId, firstName, lastName, position, salary, hireDate, departmentId } = req.body;
+
+      const newEmployee = await Employees.create({
+        employeeId,
+        firstName,
+        lastName,
+        position,
+        salary,
+        hireDate,
+        departmentId,
+      });
+
+      res.status(201).json(newEmployee);
+    } catch (e: any) {
+      res.status(500).json({
+        error: true,
+        message: e.message,
+      });
+    }
+  };
 
   findAll = async (req: Request, res: Response) => {
     try {
@@ -35,15 +56,19 @@ export class EmployeesController {
         OFFSET :offsetNum
       `;
 
-      const data = await sequelize.query(query, {
+      const employees = await sequelize.query<IEmployee>(query, {
         type: QueryTypes.SELECT,
         replacements: { limitNum, offsetNum },
+      });
+
+      employees.forEach((employee) => {
+        employee.salary = Number(employee.salary);
       });
 
       const count = await Employees.count();
       const hasMore = limitNum + offsetNum < count;
 
-      res.json({ data, hasMore });
+      res.json({ employees, hasMore });
     } catch (e: any) {
       res.status(500).json({
         error: true,
@@ -56,7 +81,31 @@ export class EmployeesController {
 
   update = (req: Request, res: Response) => {};
 
-  deleteOne = (req: Request, res: Response) => {};
+  deleteOne = async (req: Request, res: Response) => {
+    const employeeIdToDelete = req.params.employeeId;
+
+    try {
+      // Найдем сотрудника, которого нужно удалить
+      const employeeToDelete = await Employees.findByPk(employeeIdToDelete);
+
+      if (!employeeToDelete) {
+        // Если сотрудник не найден, вернем 404 Not Found
+        res.status(404).json({
+          error: 'Сотрудник не найден',
+        });
+        return;
+      }
+
+      // Удаление сотрудника
+      await employeeToDelete.destroy();
+
+      res.status(204).send(); // Возвращаем статус 204 No Content после успешного удаления
+    } catch (e: any) {
+      res.status(500).json({
+        error: e.message,
+      });
+    }
+  };
 
   deleteAll = (req: Request, res: Response) => {};
 }

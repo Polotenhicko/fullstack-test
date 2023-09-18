@@ -1,6 +1,6 @@
 -- Создание таблицы "Отделы" (Departments)
 CREATE TABLE Departments (
-    department_id INTEGER PRIMARY KEY,
+    department_id SERIAL PRIMARY KEY,
     department_name VARCHAR(255) NOT NULL,
     manager_id INTEGER,
     budget NUMERIC,
@@ -9,7 +9,7 @@ CREATE TABLE Departments (
 
 -- Создание таблицы "Сотрудники" (Employees)
 CREATE TABLE Employees (
-    employee_id INTEGER PRIMARY KEY,
+    employee_id SERIAL PRIMARY KEY,
     first_name VARCHAR(255),
     last_name VARCHAR(255),
     position VARCHAR(255),

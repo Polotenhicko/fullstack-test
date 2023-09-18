@@ -6,61 +6,96 @@ import { DEFAULT_LIMIT } from '../../constants/tables';
 export interface IEmployeesState {
   employees: IEmployee[];
   loading: boolean;
-  offset: number;
-  limit: number;
   hasMore: boolean;
   error?: string;
 }
-
-type TFetchEmployees = {
-  data: IEmployee[];
-  hasMore: boolean;
-};
 
 export type TFetchEmployeesResult = {
   employees: IEmployee[];
   hasMore: boolean;
 };
 
-// Определение начального состояния
+export type TAddEmployeesResult = {
+  employee: IEmployee;
+};
+
+export type IDeleteEmployeeResult = {
+  employeeId: IEmployee['employeeId'];
+  isDeleted: boolean;
+  error?: string;
+};
+
 const initialState: IEmployeesState = {
   employees: [],
-  offset: 0,
   hasMore: true,
   loading: false,
-  limit: DEFAULT_LIMIT,
 };
 
 export const fetchEmployees = createAsyncThunk<TFetchEmployeesResult, { startRow: number; endRow: number }>(
   'employees/fetchEmployees',
   async ({ startRow, endRow }, thunkApi) => {
-    const currentState = thunkApi.getState() as { employees: IEmployeesState }; // Получаем offset и limit из состояния Redux
-    const { offset, limit } = currentState.employees;
-    // Здесь может быть ваш код для выполнения асинхронного запроса
-
     const fetchStore = new FetchService({
       method: 'GET',
       routeInfo: {
         route: '/employees',
         searchParams: {
-          limit: startRow && endRow ? String(endRow - startRow) : String(limit),
-          offset: startRow && endRow ? String(startRow) : String(offset),
+          limit: String(endRow - startRow),
+          offset: String(startRow),
         },
       },
     });
-    await new Promise<void>((r) => setTimeout(() => r(), 1e3));
-    const { data, hasMore } = await fetchStore.sendRequest<TFetchEmployees>();
-    return { employees: data, hasMore };
+
+    const result = await fetchStore.sendRequest<TFetchEmployeesResult>();
+    return result;
   },
 );
 
-// Создание среза (slice) для employees
+export const createEmployee = createAsyncThunk<TAddEmployeesResult, Record<string, string>>(
+  'employees/createEmployee',
+  async (employeeRow, thunkApi) => {
+    const fetchStore = new FetchService({
+      method: 'POST',
+      routeInfo: {
+        route: '/employees',
+      },
+      body: employeeRow,
+    });
+
+    const result = await fetchStore.sendRequest<TAddEmployeesResult>();
+    return result;
+  },
+);
+
+export const deleteEmployee = createAsyncThunk<boolean, IEmployee['employeeId'][]>(
+  'employees/deleteEmployee',
+  async (employeeIds, thunkApi) => {
+    const fetchStores = employeeIds.map(
+      (id) =>
+        new FetchService({
+          method: 'DELETE',
+          routeInfo: {
+            route: '/employees',
+            params: {
+              employeeId: String(id),
+            },
+          },
+        }),
+    );
+
+    const result = await Promise.allSettled(
+      fetchStores.map((store) => store.sendRequest<IDeleteEmployeeResult>()),
+    );
+
+    return true;
+  },
+);
+
 const employeesSlice = createSlice({
   name: 'employees',
   initialState,
   reducers: {
-    receivedEmployees: (state, action: PayloadAction<IEmployee[]>) => {
-      return { ...state, employees: [...state.employees, ...action.payload] };
+    clearEmployees: (state) => {
+      return { ...state, employees: [] };
     },
   },
   extraReducers: (builder) => {
@@ -70,9 +105,11 @@ const employeesSlice = createSlice({
       })
       .addCase(fetchEmployees.fulfilled, (state, action) => {
         state.loading = false;
-        state.offset += DEFAULT_LIMIT;
+        state.error = undefined;
         state.hasMore = action.payload.hasMore;
-        state.employees = [...state.employees, ...action.payload.employees];
+
+        const newEmployees = action.payload.employees.map((employee) => ({ ...employee }));
+        state.employees = [...state.employees, ...newEmployees];
       })
       .addCase(fetchEmployees.rejected, (state, action) => {
         state.loading = false;
@@ -81,5 +118,5 @@ const employeesSlice = createSlice({
   },
 });
 
-export const { receivedEmployees } = employeesSlice.actions;
+export const { clearEmployees } = employeesSlice.actions;
 export default employeesSlice.reducer;

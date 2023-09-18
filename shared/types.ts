@@ -1,17 +1,17 @@
 export interface IDepartment {
   departmentId: number;
   departmentName: string;
-  managerId: number;
-  budget: number;
-  establishmentYear: number;
+  managerId: number | null;
+  budget: number | null;
+  establishmentYear: number | null;
 }
 
 export interface IEmployee {
   employeeId: number;
-  firstName: string;
-  lastName: string;
-  position: string;
-  salary: number;
-  hireDate: string;
-  departmentId: number;
+  firstName: string | null;
+  lastName: string | null;
+  position: string | null;
+  salary: number | null;
+  hireDate: string | null;
+  departmentId: number | null;
 }

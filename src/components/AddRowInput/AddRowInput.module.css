@@ -1,0 +1,13 @@
+.addRowInput {
+  display: flex;
+  column-gap: 10px;
+  width: 100%;
+}
+
+.addRowInput input {
+  flex: 1 1 100%;
+}
+
+.addRowInput label {
+  flex: 1 1 200px;
+}

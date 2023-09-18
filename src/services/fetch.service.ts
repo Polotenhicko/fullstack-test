@@ -67,6 +67,8 @@ export class FetchService {
 
     for (const key in routeInfo.params) {
       const param = routeInfo.params[key];
+
+      if (url.pathname.at(-1) !== '/') url.pathname += '/';
       url.pathname += param + '/';
     }
 

@@ -1,29 +1,54 @@
 import { AgGridReact } from 'ag-grid-react';
 import styles from './Table.module.css';
-import { TFetchEmployeesResult, fetchEmployees } from '../../store/slices/employeesSlice';
+import {
+  TFetchEmployeesResult,
+  clearEmployees,
+  createEmployee,
+  deleteEmployee,
+  fetchEmployees,
+} from '../../store/slices/employeesSlice';
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { IEmployee } from '../../../shared/types';
 import { DEFAULT_LIMIT } from '../../constants/tables';
-import { ColDef, GridReadyEvent, IDatasource, ValueFormatterParams } from 'ag-grid-community';
+import {
+  CellValueChangedEvent,
+  ColDef,
+  GridReadyEvent,
+  IDatasource,
+  ValueFormatterParams,
+} from 'ag-grid-community';
 import classNames from 'classnames';
+import { Button } from '../../controls/Button';
+import { useRef, useState } from 'react';
+import { ModalAddRow } from '../ModalAddRow';
 
 export function Table() {
   const employees = useAppSelector(({ employees }) => employees);
   const dispatch = useAppDispatch();
+  console.log(employees);
+
+  const gridRef = useRef<AgGridReact>(null);
+
+  const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+
+  const closeModalAddRow = () => {
+    setIsOpenAddModal(false);
+  };
 
   const dataSource: IDatasource = {
     rowCount: DEFAULT_LIMIT,
 
     getRows(params) {
       const { startRow, endRow, successCallback, failCallback } = params;
-      console.log(startRow, endRow);
-
       dispatch(fetchEmployees({ startRow, endRow })).then((result) => {
         const payload = result.payload as TFetchEmployeesResult;
 
-        successCallback(payload.employees, payload.hasMore ? undefined : endRow);
+        const lastRow = payload.hasMore ? undefined : startRow + payload.employees.length;
+        console.log('1', Object.getOwnPropertyDescriptors(payload.employees[0]));
+
+        successCallback(payload.employees, lastRow);
       });
     },
   };
@@ -38,28 +63,68 @@ export function Table() {
           return <img src="https://www.ag-grid.com/example-assets/loading.gif" />;
         }
       },
+      cellDataType: 'number',
     },
-    { field: 'firstName' },
-    { field: 'lastName' },
-    { field: 'position' },
-    { field: 'salary' },
-    { field: 'hireDate' },
-    { field: 'departmentId' },
+    { field: 'firstName', cellDataType: 'text' },
+    { field: 'lastName', cellDataType: 'text' },
+    { field: 'position', cellDataType: 'text' },
+    { field: 'salary', cellDataType: 'number' },
+    { field: 'hireDate', cellDataType: 'dateString' },
+    { field: 'departmentId', cellDataType: 'number' },
   ];
+
+  const onCellValueChanged = (event: CellValueChangedEvent) => {
+    // Здесь event теперь будет правильно типизирован
+    console.log('Значение в ячейке было изменено:', event);
+  };
+
+  const defaultColDef: ColDef = {
+    flex: 1,
+    editable: true,
+  };
 
   const onGridReady = (params: GridReadyEvent<IEmployee>) => {
     params.api.setDatasource(dataSource);
   };
 
+  const handleInsert = (values: Record<string, string>) => {
+    dispatch(createEmployee(values)).then(() => {
+      dispatch(clearEmployees());
+      gridRef.current!.api.refreshInfiniteCache();
+    });
+  };
+
+  const handleDelete = () => {
+    const selectedNodes = gridRef.current!.api.getSelectedNodes();
+    if (!selectedNodes.length) return;
+
+    const deletingIds = selectedNodes.map(({ data }: { data: IEmployee }) => data.employeeId);
+    dispatch(deleteEmployee(deletingIds)).then(() => {
+      dispatch(clearEmployees());
+      gridRef.current!.api.refreshInfiniteCache();
+    });
+  };
+
   return (
-    <div className={classNames(styles.table, 'ag-theme-alpine')} style={{ height: 500 }}>
-      <AgGridReact
-        columnDefs={columnDefs}
-        rowModelType="infinite"
-        onGridReady={onGridReady}
-        cacheBlockSize={10}
-        maxBlocksInCache={10}
-      />
+    <div>
+      <div className={styles.controlBar}>
+        <Button onClick={() => setIsOpenAddModal(true)}>Add row</Button>
+        <Button onClick={() => handleDelete()}>Delete selected node</Button>
+      </div>
+      <div className="ag-theme-alpine" style={{ height: 500 }}>
+        <AgGridReact
+          ref={gridRef}
+          columnDefs={columnDefs}
+          defaultColDef={defaultColDef}
+          cacheBlockSize={DEFAULT_LIMIT}
+          maxBlocksInCache={DEFAULT_LIMIT}
+          onCellValueChanged={onCellValueChanged}
+          onGridReady={onGridReady}
+          rowModelType="infinite"
+          rowSelection="multiple"
+        />
+      </div>
+      {isOpenAddModal && <ModalAddRow fields={columnDefs} onClose={closeModalAddRow} onInsert={handleInsert} />}
     </div>
   );
 }
