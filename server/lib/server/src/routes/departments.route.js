@@ -6,8 +6,8 @@ const controllers_1 = require("../controllers");
 const departmentsRouter = express.Router();
 exports.departmentsRouter = departmentsRouter;
 const departmentsController = new controllers_1.DepartmentsController();
-departmentsRouter.get('/employees', departmentsController.findAll);
-departmentsRouter.post('/employees', departmentsController.create);
-departmentsRouter.delete('/employees/:employeeId', departmentsController.deleteOne);
-departmentsRouter.patch('/employees/:employeeId', departmentsController.update);
+departmentsRouter.get('/departments', departmentsController.findAll);
+departmentsRouter.post('/departments', departmentsController.create);
+departmentsRouter.delete('/departments/:employeeId', departmentsController.deleteOne);
+departmentsRouter.patch('/departments/:employeeId', departmentsController.update);
 //# sourceMappingURL=departments.route.js.map

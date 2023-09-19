@@ -31,6 +31,7 @@ import DataTable from 'examples/Tables/DataTable';
 import authorsTableData from 'layouts/tables/data/authorsTableData';
 import projectsTableData from 'layouts/tables/data/projectsTableData';
 import { EmployeesTable } from 'components/EmployeesTable';
+import { DepartmentsTable } from 'components/DepartmentsTable';
 
 function Tables() {
   const { columns, rows } = authorsTableData();
@@ -79,13 +80,7 @@ function Tables() {
                 </MDTypography>
               </MDBox>
               <MDBox pt={3}>
-                <DataTable
-                  table={{ columns: pColumns, rows: pRows }}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
-                  noEndBorder
-                />
+                <DepartmentsTable />
               </MDBox>
             </Card>
           </Grid>

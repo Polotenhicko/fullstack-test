@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IEmployee } from './../../../../shared/types';
-import { DEFAULT_LIMIT } from '../../constants/tables';
 import { FetchService } from 'store/services/fetch.service';
 
 export interface IEmployeesState {

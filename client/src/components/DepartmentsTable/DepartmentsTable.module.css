@@ -1,0 +1,10 @@
+.table {
+  text-align: center;
+}
+
+.controlBar {
+  display: flex;
+  column-gap: 5px;
+  padding-left: 15px;
+  padding-bottom: 10px;
+}
