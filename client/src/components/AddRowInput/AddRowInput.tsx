@@ -6,17 +6,17 @@ import { getCellDataType } from '../../utils/getCellDataType';
 
 interface IAddRowInputProps {
   field: ColDef;
-  onChane: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export function AddRowInput({ field, onChane }: IAddRowInputProps) {
+export function AddRowInput({ field, onChange }: IAddRowInputProps) {
   const id = useId();
   const type = getCellDataType(field.cellDataType);
 
   return (
     <div className={styles.addRowInput}>
       <label htmlFor={id}>{field.field}</label>
-      <Input id={id} name={field.field} placeholder={field.field} type={type} onChange={onChane} />
+      <Input id={id} name={field.field} placeholder={field.field} type={type} onChange={onChange} />
     </div>
   );
 }

@@ -1,7 +1,5 @@
 .modalItem {
   background-color: #fff;
-  width: 55%;
-  max-height: 80%;
   padding: 20px;
   display: flex;
   flex-direction: column;

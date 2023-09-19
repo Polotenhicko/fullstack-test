@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { FetchService } from '../../services/fetch.service';
-import { IEmployee } from '../../../../shared/types';
+import { IEmployee } from 'shared/types';
 import { DEFAULT_LIMIT } from '../../constants/tables';
+import { FetchService } from 'store/services/fetch.service';
 
 export interface IEmployeesState {
   employees: IEmployee[];
@@ -58,6 +58,7 @@ export const fetchEmployees = createAsyncThunk<TFetchEmployeesResult, { startRow
     });
 
     const result = await fetchStore.sendRequest<TFetchEmployeesResult>();
+
     return result;
   },
 );

@@ -1,1 +1,1 @@
-export { AddRowInput } from './AddRowInput'
+export { AddRowInput } from './AddRowInput';

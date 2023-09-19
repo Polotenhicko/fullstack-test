@@ -11,7 +11,7 @@ import {
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { IEmployee } from '../../../../shared/types';
+import { IEmployee } from '../../shared/types';
 import { DEFAULT_LIMIT } from '../../constants/tables';
 import {
   CellValueChangedEvent,
@@ -21,7 +21,7 @@ import {
   ValueFormatterParams,
 } from 'ag-grid-community';
 import classNames from 'classnames';
-import { Button } from '../../controls/Button';
+import Button from '@mui/material/Button';
 import { useEffect, useRef, useState } from 'react';
 import { ModalAddRow } from '../ModalAddRow';
 
@@ -51,6 +51,7 @@ export function Table() {
       const { startRow, endRow, successCallback, failCallback } = params;
       dispatch(fetchEmployees({ startRow, endRow })).then((result) => {
         const payload = result.payload as TFetchEmployeesResult;
+        console.log(payload);
 
         const lastRow = payload.hasMore ? undefined : startRow + payload.employees.length;
 
@@ -125,8 +126,17 @@ export function Table() {
   return (
     <div>
       <div className={styles.controlBar}>
-        <Button onClick={() => setIsOpenAddModal(true)}>Add row</Button>
-        <Button onClick={() => handleDelete()}>Delete selected node</Button>
+        <Button
+          onClick={() => setIsOpenAddModal(true)}
+          variant="contained"
+          disableElevation
+          sx={{ color: '#fff' }}
+        >
+          Add row
+        </Button>
+        <Button onClick={() => handleDelete()} variant="contained" disableElevation sx={{ color: '#fff' }}>
+          Delete rows
+        </Button>
       </div>
       <div className="ag-theme-alpine" style={{ height: 500 }}>
         <AgGridReact

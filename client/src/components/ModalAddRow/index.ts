@@ -1,1 +1,1 @@
-export { ModalAddRow } from './ModalAddRow'
+export { ModalAddRow } from './ModalAddRow';
