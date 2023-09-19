@@ -1,0 +1,1 @@
+export { DepartmentsTable } from './DepartmentsTable'

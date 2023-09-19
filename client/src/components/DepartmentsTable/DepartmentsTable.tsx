@@ -1,5 +1,5 @@
 import { AgGridReact } from 'ag-grid-react';
-import styles from './Table.module.css';
+import styles from './DepartmentsTable.module.css';
 import {
   TFetchEmployeesResult,
   clearEmployees,
@@ -25,7 +25,7 @@ import Button from '@mui/material/Button';
 import { useEffect, useRef, useState } from 'react';
 import { ModalAddRow } from '../ModalAddRow';
 
-export function Table() {
+export function DepartmentsTable() {
   const employees = useAppSelector(({ employees }) => employees);
   const dispatch = useAppDispatch();
   console.log(employees);

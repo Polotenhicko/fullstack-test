@@ -30,7 +30,7 @@ import DataTable from 'examples/Tables/DataTable';
 // Data
 import authorsTableData from 'layouts/tables/data/authorsTableData';
 import projectsTableData from 'layouts/tables/data/projectsTableData';
-import { Table } from 'components/Table';
+import { EmployeesTable } from 'components/EmployeesTable';
 
 function Tables() {
   const { columns, rows } = authorsTableData();
@@ -58,7 +58,7 @@ function Tables() {
                 </MDTypography>
               </MDBox>
               <MDBox pt={3}>
-                <Table />
+                <EmployeesTable />
               </MDBox>
             </Card>
           </Grid>
