@@ -6,11 +6,12 @@ import {
   createEmployee,
   deleteEmployee,
   fetchEmployees,
+  updateEmployee,
 } from '../../store/slices/employeesSlice';
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { IEmployee } from '../../../shared/types';
+import { IEmployee } from '../../../../shared/types';
 import { DEFAULT_LIMIT } from '../../constants/tables';
 import {
   CellValueChangedEvent,
@@ -21,7 +22,7 @@ import {
 } from 'ag-grid-community';
 import classNames from 'classnames';
 import { Button } from '../../controls/Button';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ModalAddRow } from '../ModalAddRow';
 
 export function Table() {
@@ -37,6 +38,12 @@ export function Table() {
     setIsOpenAddModal(false);
   };
 
+  useEffect(() => {
+    return () => {
+      dispatch(clearEmployees());
+    };
+  }, []);
+
   const dataSource: IDatasource = {
     rowCount: DEFAULT_LIMIT,
 
@@ -46,7 +53,6 @@ export function Table() {
         const payload = result.payload as TFetchEmployeesResult;
 
         const lastRow = payload.hasMore ? undefined : startRow + payload.employees.length;
-        console.log('1', Object.getOwnPropertyDescriptors(payload.employees[0]));
 
         successCallback(payload.employees, lastRow);
       });
@@ -73,9 +79,20 @@ export function Table() {
     { field: 'departmentId', cellDataType: 'number' },
   ];
 
-  const onCellValueChanged = (event: CellValueChangedEvent) => {
-    // Здесь event теперь будет правильно типизирован
-    console.log('Значение в ячейке было изменено:', event);
+  const onCellValueChanged = (event: CellValueChangedEvent<IEmployee>) => {
+    const employeeId = event.data.employeeId;
+    const fieldName = event.colDef.field;
+
+    if (!fieldName) throw new Error('Doe not have fieldName!');
+
+    dispatch(
+      updateEmployee({
+        employeeId,
+        fields: {
+          [fieldName]: event.newValue,
+        },
+      }),
+    );
   };
 
   const defaultColDef: ColDef = {

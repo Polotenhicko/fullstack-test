@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FetchService } from '../../services/fetch.service';
-import { IEmployee } from '../../../shared/types';
+import { IEmployee } from '../../../../shared/types';
 import { DEFAULT_LIMIT } from '../../constants/tables';
 
 export interface IEmployeesState {
@@ -22,6 +22,18 @@ export type TAddEmployeesResult = {
 export type IDeleteEmployeeResult = {
   employeeId: IEmployee['employeeId'];
   isDeleted: boolean;
+  error?: string;
+};
+
+interface IUpdateEmployee {
+  employeeId: IEmployee['employeeId'];
+  fields: {
+    [T in keyof IEmployee]?: IEmployee[T];
+  };
+}
+
+export type TUpdateEmployeesResult = {
+  employee: IEmployee;
   error?: string;
 };
 
@@ -87,6 +99,25 @@ export const deleteEmployee = createAsyncThunk<boolean, IEmployee['employeeId'][
     );
 
     return true;
+  },
+);
+
+export const updateEmployee = createAsyncThunk<TUpdateEmployeesResult, IUpdateEmployee>(
+  'employees/updateEmployee',
+  async ({ employeeId, fields }, thunkApi) => {
+    const fetchStore = new FetchService({
+      method: 'PATCH',
+      routeInfo: {
+        route: '/employees',
+        params: {
+          employeeId: String(employeeId),
+        },
+      },
+      body: fields,
+    });
+
+    const result = await fetchStore.sendRequest<TUpdateEmployeesResult>();
+    return result;
   },
 );
 

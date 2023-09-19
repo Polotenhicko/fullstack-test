@@ -79,7 +79,31 @@ export class EmployeesController {
 
   findOne = (req: Request, res: Response) => {};
 
-  update = (req: Request, res: Response) => {};
+  update = async (req: Request, res: Response) => {
+    const employeeId = req.params.employeeId;
+    const updates = req.body;
+
+    try {
+      // Найдем сотрудника, которого нужно удалить
+      const employeeToUpdate = await Employees.findByPk(employeeId);
+
+      if (!employeeToUpdate) {
+        // Если сотрудник не найден, вернем 404 Not Found
+        res.status(404).json({
+          error: 'Сотрудник не найден',
+        });
+        return;
+      }
+
+      await employeeToUpdate.update(updates);
+
+      res.status(200).json({ employee: employeeToUpdate });
+    } catch (e: any) {
+      res.status(500).json({
+        error: e.message,
+      });
+    }
+  };
 
   deleteOne = async (req: Request, res: Response) => {
     const employeeIdToDelete = req.params.employeeId;
