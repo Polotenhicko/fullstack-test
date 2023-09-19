@@ -12,5 +12,6 @@ app.use(cors(cors_config_1.corsConfig));
 app.use(express.json());
 // routes
 app.use(routes_1.employeesRouter);
+app.use(routes_1.departmentsRouter);
 app.listen(api_1.port, () => console.log(`Running on port ${api_1.port}`));
 //# sourceMappingURL=index.js.map
