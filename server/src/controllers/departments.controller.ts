@@ -37,7 +37,7 @@ export class DepartmentsController {
           "department_name" AS "departmentName",
           "manager_id" AS "managerId",
           "budget",
-          "establishment_year" AS "establishmentYear",
+          "establishment_year" AS "establishmentYear"
         FROM "departments" 
         AS "Departments" 
         LIMIT :limitNum 
