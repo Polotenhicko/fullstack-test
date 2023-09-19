@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IEmployee } from 'shared/types';
+import { IEmployee } from './../../../../shared/types';
 import { DEFAULT_LIMIT } from '../../constants/tables';
 import { FetchService } from 'store/services/fetch.service';
 
@@ -25,7 +25,7 @@ export type IDeleteEmployeeResult = {
   error?: string;
 };
 
-interface IUpdateEmployee {
+export interface IUpdateEmployee {
   employeeId: IEmployee['employeeId'];
   fields: {
     [T in keyof IEmployee]?: IEmployee[T];

@@ -11,7 +11,7 @@ import {
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { IEmployee } from '../../shared/types';
+import { IEmployee } from './../../../../shared/types';
 import { DEFAULT_LIMIT } from '../../constants/tables';
 import {
   CellValueChangedEvent,
