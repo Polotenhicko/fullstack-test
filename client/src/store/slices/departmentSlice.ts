@@ -125,7 +125,7 @@ const departmentsSlice = createSlice({
   name: 'departments',
   initialState,
   reducers: {
-    clearDepartments: (state, action: PayloadAction<IDepartment[]>) => {
+    clearDepartments: (state) => {
       return { ...state, departments: [] };
     },
   },

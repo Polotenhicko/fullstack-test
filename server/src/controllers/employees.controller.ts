@@ -6,11 +6,21 @@ import { QueryTypes } from 'sequelize';
 
 export class EmployeesController {
   create = async (req: Request, res: Response) => {
+    const { employeeId, firstName, lastName, position, salary, hireDate, departmentId } = req.body;
     try {
-      const { employeeId, firstName, lastName, position, salary, hireDate, departmentId } = req.body;
+      const hasEmployeeByPK = await Employees.findByPk(employeeId);
+
+      if (hasEmployeeByPK) {
+        throw new Error(`employee_id ${employeeId} has ready exist!`);
+      }
+
+      const maxEmployeeId = (await Employees.max('employeeId')) as number | null;
+
+      // Если есть записи в таблице Departments, увеличиваем максимальное значение на 1, иначе начинаем с 1
+      const nextEmployeeId = maxEmployeeId ? maxEmployeeId + 1 : 1;
 
       const newEmployee = await Employees.create({
-        employeeId,
+        employeeId: nextEmployeeId,
         firstName,
         lastName,
         position,

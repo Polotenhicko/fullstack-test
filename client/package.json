@@ -35,7 +35,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "dev": "concurrently \"npm start\" \"cd ./backend && npm run dev\"",
+    "dev": "concurrently \"npm start\" \"cd ./../server && npm run dev\"",
     "component": "node ./scripts/createComponentPattern.js",
     "deploy": "npm run build && gh-pages -d build",
     "pretty": "prettier --write \"./**/*.ts\""

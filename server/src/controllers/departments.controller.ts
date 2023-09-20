@@ -6,8 +6,27 @@ import { QueryTypes } from 'sequelize';
 
 export class DepartmentsController {
   create = async (req: Request, res: Response) => {
+    const { departmentId, departmentName, managerId, budget, establishmentYear } = req.body;
+
     try {
-      const newDepartment = await Departments.create(req.body);
+      const hasDepartmentByPK = await Departments.findByPk(departmentId);
+
+      if (hasDepartmentByPK) {
+        throw new Error(`department_id ${departmentId} has ready exist!`);
+      }
+
+      const maxDepartmentId = (await Departments.max('departmentId')) as number | null;
+
+      // Если есть записи в таблице Departments, увеличиваем максимальное значение на 1, иначе начинаем с 1
+      const nextDepartmentId = maxDepartmentId ? maxDepartmentId + 1 : 1;
+
+      const newDepartment = await Departments.create({
+        departmentId: nextDepartmentId,
+        departmentName,
+        managerId,
+        budget,
+        establishmentYear,
+      });
 
       res.status(201).json(newDepartment);
     } catch (e: any) {
@@ -49,8 +68,8 @@ export class DepartmentsController {
         replacements: { limitNum, offsetNum },
       });
 
-      departments.forEach((employee) => {
-        employee.budget = Number(employee.budget);
+      departments.forEach((department) => {
+        department.budget = Number(department.budget);
       });
 
       const count = await Departments.count();
@@ -85,7 +104,7 @@ export class DepartmentsController {
 
       await departmentToUpdate.update(updates);
 
-      res.status(200).json({ employee: departmentToUpdate });
+      res.status(200).json({ department: departmentToUpdate });
     } catch (e: any) {
       res.status(500).json({
         error: e.message,

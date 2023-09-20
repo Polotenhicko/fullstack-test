@@ -1,17 +1,9 @@
 import { AgGridReact } from 'ag-grid-react';
 import styles from './DepartmentsTable.module.css';
-import {
-  TFetchEmployeesResult,
-  clearEmployees,
-  createEmployee,
-  deleteEmployee,
-  fetchEmployees,
-  updateEmployee,
-} from '../../store/slices/employeesSlice';
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { IEmployee } from './../../../../shared/types';
+import { IDepartment } from './../../../../shared/types';
 import { DEFAULT_LIMIT } from '../../constants/tables';
 import {
   CellValueChangedEvent,
@@ -20,15 +12,23 @@ import {
   IDatasource,
   ValueFormatterParams,
 } from 'ag-grid-community';
-import classNames from 'classnames';
 import Button from '@mui/material/Button';
 import { useEffect, useRef, useState } from 'react';
 import { ModalAddRow } from '../ModalAddRow';
+import {
+  IFetchDepartmentsResult,
+  clearDepartments,
+  createDepartment,
+  deleteDepartments,
+  fetchDepartments,
+  updateDepartment,
+} from 'store/slices/departmentSlice';
+import { ITablesColumnDef } from 'components/ModalAddRow/ModalAddRow';
 
 export function DepartmentsTable() {
-  const employees = useAppSelector(({ employees }) => employees);
+  const departments = useAppSelector(({ departments }) => departments);
   const dispatch = useAppDispatch();
-  console.log(employees);
+  console.log(departments);
 
   const gridRef = useRef<AgGridReact>(null);
 
@@ -40,7 +40,7 @@ export function DepartmentsTable() {
 
   useEffect(() => {
     return () => {
-      dispatch(clearEmployees());
+      dispatch(clearDepartments());
     };
   }, []);
 
@@ -49,20 +49,20 @@ export function DepartmentsTable() {
 
     getRows(params) {
       const { startRow, endRow, successCallback, failCallback } = params;
-      dispatch(fetchEmployees({ startRow, endRow })).then((result) => {
-        const payload = result.payload as TFetchEmployeesResult;
+      dispatch(fetchDepartments({ startRow, endRow })).then((result) => {
+        const payload = result.payload as IFetchDepartmentsResult;
         console.log(payload);
 
-        const lastRow = payload.hasMore ? undefined : startRow + payload.employees.length;
+        const lastRow = payload.hasMore ? undefined : startRow + payload.departments.length;
 
-        successCallback(payload.employees, lastRow);
+        successCallback(payload.departments, lastRow);
       });
     },
   };
 
-  const columnDefs: ColDef[] = [
+  const columnDefs: ITablesColumnDef[] = [
     {
-      field: 'employeeId',
+      field: 'departmentId',
       cellRenderer: (props: ValueFormatterParams) => {
         if (props.value !== undefined) {
           return props.value;
@@ -71,24 +71,54 @@ export function DepartmentsTable() {
         }
       },
       cellDataType: 'number',
+      customInfo: {
+        required: false,
+        inputType: 'number',
+      },
     },
-    { field: 'firstName', cellDataType: 'text' },
-    { field: 'lastName', cellDataType: 'text' },
-    { field: 'position', cellDataType: 'text' },
-    { field: 'salary', cellDataType: 'number' },
-    { field: 'hireDate', cellDataType: 'dateString' },
-    { field: 'departmentId', cellDataType: 'number' },
+    {
+      field: 'departmentName',
+      cellDataType: 'text',
+      customInfo: {
+        required: true,
+        inputType: 'text',
+      },
+    },
+    {
+      field: 'managerId',
+      cellDataType: 'number',
+      customInfo: {
+        required: false,
+        inputType: 'number',
+      },
+    },
+    {
+      field: 'budget',
+      cellDataType: 'number',
+      customInfo: {
+        required: false,
+        inputType: 'number',
+      },
+    },
+    {
+      field: 'establishmentYear',
+      cellDataType: 'number',
+      customInfo: {
+        required: false,
+        inputType: 'number',
+      },
+    },
   ];
 
-  const onCellValueChanged = (event: CellValueChangedEvent<IEmployee>) => {
-    const employeeId = event.data.employeeId;
+  const onCellValueChanged = (event: CellValueChangedEvent<IDepartment>) => {
+    const departmentId = event.data.departmentId;
     const fieldName = event.colDef.field;
 
     if (!fieldName) throw new Error('Doe not have fieldName!');
 
     dispatch(
-      updateEmployee({
-        employeeId,
+      updateDepartment({
+        departmentId,
         fields: {
           [fieldName]: event.newValue,
         },
@@ -101,13 +131,13 @@ export function DepartmentsTable() {
     editable: true,
   };
 
-  const onGridReady = (params: GridReadyEvent<IEmployee>) => {
+  const onGridReady = (params: GridReadyEvent<IDepartment>) => {
     params.api.setDatasource(dataSource);
   };
 
   const handleInsert = (values: Record<string, string>) => {
-    dispatch(createEmployee(values)).then(() => {
-      dispatch(clearEmployees());
+    dispatch(createDepartment(values)).then(() => {
+      dispatch(clearDepartments());
       gridRef.current!.api.refreshInfiniteCache();
     });
   };
@@ -116,9 +146,9 @@ export function DepartmentsTable() {
     const selectedNodes = gridRef.current!.api.getSelectedNodes();
     if (!selectedNodes.length) return;
 
-    const deletingIds = selectedNodes.map(({ data }: { data: IEmployee }) => data.employeeId);
-    dispatch(deleteEmployee(deletingIds)).then(() => {
-      dispatch(clearEmployees());
+    const deletingIds = selectedNodes.map(({ data }: { data: IDepartment }) => data.departmentId);
+    dispatch(deleteDepartments(deletingIds)).then(() => {
+      dispatch(clearDepartments());
       gridRef.current!.api.refreshInfiniteCache();
     });
   };

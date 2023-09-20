@@ -43,7 +43,7 @@ export const Employees = sequelize.define(
   {
     tableName: 'employees', // Указываем имя таблицы
     timestamps: false, // Если не нужно хранить временные метки создания и обновления
-  },
+  }
 );
 
 Employees.hasOne(Departments, { foreignKey: 'department_id' });
