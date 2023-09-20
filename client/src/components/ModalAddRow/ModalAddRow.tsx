@@ -6,7 +6,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material
 import Button from '@mui/material/Button';
 
 export interface ITablesColumnDef extends ColDef {
-  customInfo: {
+  customInfo?: {
     inputType: string;
     required: boolean;
   };
@@ -35,7 +35,8 @@ export function ModalAddRow({ fields, onClose, onInsert }: IModalArrRowProps) {
     setIsRendered(true);
   });
 
-  const handleClickOutsideModal = () => {
+  const handleClickOutsideModal = (e: any) => {
+    e.stopPropagation();
     onClose();
   };
 

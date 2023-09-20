@@ -23,6 +23,9 @@ import {
 import Button from '@mui/material/Button';
 import { useEffect, useRef, useState } from 'react';
 import { ModalAddRow } from '../ModalAddRow';
+import { ITablesColumnDef } from 'components/ModalAddRow/ModalAddRow';
+import MDAlert from 'components/MDAlert';
+import MDSnackbar from 'components/MDSnackbar';
 
 export function EmployeesTable() {
   const employees = useAppSelector(({ employees }) => employees);
@@ -41,13 +44,13 @@ export function EmployeesTable() {
     return () => {
       dispatch(clearEmployees());
     };
-  }, []);
+  }, [dispatch]);
 
   const dataSource: IDatasource = {
     rowCount: DEFAULT_LIMIT,
 
     getRows(params) {
-      const { startRow, endRow, successCallback, failCallback } = params;
+      const { startRow, endRow, successCallback } = params;
       dispatch(fetchEmployees({ startRow, endRow })).then((result) => {
         const payload = result.payload as TFetchEmployeesResult;
         console.log(payload);
@@ -59,14 +62,14 @@ export function EmployeesTable() {
     },
   };
 
-  const columnDefs: ColDef[] = [
+  const columnDefs: ITablesColumnDef[] = [
     {
       field: 'employeeId',
       cellRenderer: (props: ValueFormatterParams) => {
         if (props.value !== undefined) {
           return props.value;
         } else {
-          return <img src="https://www.ag-grid.com/example-assets/loading.gif" />;
+          return <img src="https://www.ag-grid.com/example-assets/loading.gif" alt="Loading..." />;
         }
       },
       cellDataType: 'number',
@@ -105,7 +108,7 @@ export function EmployeesTable() {
   };
 
   const handleInsert = (values: Record<string, string>) => {
-    dispatch(createEmployee(values)).then(() => {
+    dispatch(createEmployee(values)).then((v) => {
       dispatch(clearEmployees());
       gridRef.current!.api.refreshInfiniteCache();
     });

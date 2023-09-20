@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IEmployee } from './../../../../shared/types';
 import { FetchService } from 'store/services/fetch.service';
+import { addErrorNotification, addInfoNotification, addSuccessNotification } from './notifycationsSlice';
 
 export interface IEmployeesState {
   employees: IEmployee[];
@@ -62,19 +63,26 @@ export const fetchEmployees = createAsyncThunk<TFetchEmployeesResult, { startRow
   },
 );
 
-export const createEmployee = createAsyncThunk<TAddEmployeesResult, Record<string, string>>(
+export const createEmployee = createAsyncThunk<void, Record<string, string>>(
   'employees/createEmployee',
   async (employeeRow, thunkApi) => {
-    const fetchStore = new FetchService({
-      method: 'POST',
-      routeInfo: {
-        route: '/employees',
-      },
-      body: employeeRow,
-    });
+    thunkApi.dispatch(addInfoNotification('Loading employee creation...'));
 
-    const result = await fetchStore.sendRequest<TAddEmployeesResult>();
-    return result;
+    try {
+      const fetchStore = new FetchService({
+        method: 'POST',
+        routeInfo: {
+          route: '/employees',
+        },
+        body: employeeRow,
+      });
+
+      const result = await fetchStore.sendRequest<TAddEmployeesResult>();
+      thunkApi.dispatch(addSuccessNotification('Employee has been successfully created!'));
+    } catch (e: any) {
+      console.error(e.message);
+      thunkApi.dispatch(addErrorNotification('An error occurred while creating an employee!'));
+    }
   },
 );
 
@@ -128,24 +136,6 @@ const employeesSlice = createSlice({
     clearEmployees: (state) => {
       return { ...state, employees: [] };
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchEmployees.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchEmployees.fulfilled, (state, action) => {
-        state.loading = false;
-        state.error = undefined;
-        state.hasMore = action.payload.hasMore;
-
-        const newEmployees = action.payload.employees.map((employee) => ({ ...employee }));
-        state.employees = [...state.employees, ...newEmployees];
-      })
-      .addCase(fetchEmployees.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
-      });
   },
 });
 

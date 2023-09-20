@@ -25,18 +25,13 @@ import MDTypography from 'components/MDTypography';
 import DashboardLayout from 'examples/LayoutContainers/DashboardLayout';
 import DashboardNavbar from 'examples/Navbars/DashboardNavbar';
 import Footer from 'examples/Footer';
-import DataTable from 'examples/Tables/DataTable';
 
 // Data
-import authorsTableData from 'layouts/tables/data/authorsTableData';
-import projectsTableData from 'layouts/tables/data/projectsTableData';
 import { EmployeesTable } from 'components/EmployeesTable';
 import { DepartmentsTable } from 'components/DepartmentsTable';
+import { Alerts } from 'components/Alerts';
 
 function Tables() {
-  const { columns, rows } = authorsTableData();
-  const { columns: pColumns, rows: pRows } = projectsTableData();
-
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -87,6 +82,7 @@ function Tables() {
         </Grid>
       </MDBox>
       <Footer />
+      <Alerts />
     </DashboardLayout>
   );
 }

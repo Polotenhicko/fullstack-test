@@ -42,13 +42,13 @@ export function DepartmentsTable() {
     return () => {
       dispatch(clearDepartments());
     };
-  }, []);
+  }, [dispatch]);
 
   const dataSource: IDatasource = {
     rowCount: DEFAULT_LIMIT,
 
     getRows(params) {
-      const { startRow, endRow, successCallback, failCallback } = params;
+      const { startRow, endRow, successCallback } = params;
       dispatch(fetchDepartments({ startRow, endRow })).then((result) => {
         const payload = result.payload as IFetchDepartmentsResult;
         console.log(payload);
@@ -67,7 +67,7 @@ export function DepartmentsTable() {
         if (props.value !== undefined) {
           return props.value;
         } else {
-          return <img src="https://www.ag-grid.com/example-assets/loading.gif" />;
+          return <img src="https://www.ag-grid.com/example-assets/loading.gif" alt="Loading..." />;
         }
       },
       cellDataType: 'number',

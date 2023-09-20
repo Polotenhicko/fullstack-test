@@ -10,7 +10,7 @@ interface IAddRowInputProps {
 
 export function AddRowInput({ field, onChange }: IAddRowInputProps) {
   const id = useId();
-  const type = field.customInfo.inputType;
+  const type = field.customInfo?.inputType;
 
   return (
     <div className={styles.addRowInput}>
