@@ -155,7 +155,7 @@ export function EmployeesTable() {
   };
 
   const handleInsert = (values: Record<string, string>) => {
-    dispatch(createEmployee(values)).then((v) => {
+    dispatch(createEmployee(values)).then(() => {
       dispatch(clearEmployees());
       gridRef.current!.api.refreshInfiniteCache();
     });
