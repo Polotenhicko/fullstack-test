@@ -27,7 +27,8 @@ export function ModalAddRow({ fields, onClose, onInsert }: IModalArrRowProps) {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
-  const handleInsert = () => {
+  const handleInsert = (e: React.ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
     onInsert(values);
   };
 
