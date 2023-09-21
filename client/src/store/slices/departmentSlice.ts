@@ -62,6 +62,14 @@ export const fetchDepartments = createAsyncThunk<IFetchDepartmentsResult, { star
       return result;
     } catch (e: any) {
       console.error(e.message);
+
+      thunkApi.dispatch(
+        addNotification({
+          message: 'An error occurred while fetching a department!\n' + e.message,
+          status: ENotificationStatus['error'],
+        }),
+      );
+
       return {
         departments: [],
         hasMore: false,
@@ -102,7 +110,7 @@ export const createDepartment = createAsyncThunk<void, Record<string, string>>(
 
       thunkApi.dispatch(
         addNotification({
-          message: 'An error occurred while creating an department!',
+          message: 'An error occurred while creating a department!\n' + e.message,
           status: ENotificationStatus['error'],
         }),
       );
@@ -142,7 +150,7 @@ export const deleteDepartments = createAsyncThunk<boolean, IDepartment['departme
 
       thunkApi.dispatch(
         addNotification({
-          message: 'An error occurred while deleting an department!',
+          message: 'An error occurred while deleting a department!\n' + e.message,
           status: ENotificationStatus['error'],
         }),
       );
@@ -182,7 +190,7 @@ export const updateDepartment = createAsyncThunk<IUpdateDepartmentResult, IUpdat
 
       thunkApi.dispatch(
         addNotification({
-          message: 'An error occurred while updating an department!',
+          message: 'An error occurred while updating a department!\n' + e.message,
           status: ENotificationStatus['error'],
         }),
       );

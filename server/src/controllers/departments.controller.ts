@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { sequelize } from '../models/dbConnect';
 import { IDepartment } from '../../../shared/types';
-import { Departments } from '../models';
+import { Departments, Employees } from '../models';
 import { QueryTypes } from 'sequelize';
 
 export class DepartmentsController {
@@ -89,11 +89,11 @@ export class DepartmentsController {
     const updates = req.body;
 
     try {
-      // Найдем сотрудника, которого нужно удалить
+      // Найдем отдел, которого нужно обновить
       const departmentToUpdate = await Departments.findByPk(departmentId);
 
       if (!departmentToUpdate) {
-        // Если сотрудник не найден, вернем 404 Not Found
+        // Если отдел не найден, вернем 404 Not Found
         res.status(404).json({
           error: 'Отдел не найден',
         });
@@ -114,18 +114,27 @@ export class DepartmentsController {
     const departmentIdToDelete = req.params.departmentId;
 
     try {
-      // Найдем сотрудника, которого нужно удалить
+      // Найдем отдел, которого нужно удалить
       const departmentToDelete = await Departments.findByPk(departmentIdToDelete);
 
       if (!departmentToDelete) {
-        // Если сотрудник не найден, вернем 404 Not Found
+        // Если отдел не найден, вернем 404 Not Found
         res.status(404).json({
           error: 'Отдел не найден',
         });
         return;
       }
 
-      // Удаление сотрудника
+      // Очищаем
+      await sequelize.query(
+        'UPDATE Employees SET department_id = null WHERE department_id = :departmentIdToDelete',
+        {
+          replacements: { departmentIdToDelete },
+          type: QueryTypes.UPDATE,
+        }
+      );
+
+      // Удаление отдел
       await departmentToDelete.destroy();
 
       res.status(204).send(); // Возвращаем статус 204 No Content после успешного удаления

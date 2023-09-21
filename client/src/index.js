@@ -22,6 +22,7 @@ import './index.css';
 
 // Material Dashboard 2 React Context Provider
 import { MaterialUIControllerProvider } from 'context';
+import { ErrorBoundary } from 'components/ErrorBoundary';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
@@ -29,9 +30,11 @@ const root = createRoot(container);
 root.render(
   <HashRouter>
     <MaterialUIControllerProvider>
-      <Provider store={store}>
-        <App />
-      </Provider>
+      <ErrorBoundary>
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </ErrorBoundary>
     </MaterialUIControllerProvider>
   </HashRouter>,
 );

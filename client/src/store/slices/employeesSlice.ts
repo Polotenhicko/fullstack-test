@@ -72,7 +72,7 @@ export const fetchEmployees = createAsyncThunk<IFetchEmployeesResult, { startRow
 
       thunkApi.dispatch(
         addNotification({
-          message: 'An error occurred while fetching an employee!',
+          message: 'An error occurred while fetching an employee!\n' + e.message,
           status: ENotificationStatus['error'],
         }),
       );
@@ -116,7 +116,7 @@ export const createEmployee = createAsyncThunk<void, Record<string, string>>(
       console.error(e.message);
       thunkApi.dispatch(
         addNotification({
-          message: 'An error occurred while creating an employee!',
+          message: 'An error occurred while creating an employee!\n' + e.message,
           status: ENotificationStatus['error'],
         }),
       );
@@ -157,7 +157,7 @@ export const deleteEmployee = createAsyncThunk<boolean, IEmployee['employeeId'][
       console.error(e.message);
       thunkApi.dispatch(
         addNotification({
-          message: 'An error occurred while deleting an employee!',
+          message: 'An error occurred while deleting an employee!\n' + e.message,
           status: ENotificationStatus['error'],
         }),
       );
@@ -196,7 +196,7 @@ export const updateEmployee = createAsyncThunk<TUpdateEmployeesResult, IUpdateEm
 
       thunkApi.dispatch(
         addNotification({
-          message: 'An error occurred while updating an employee!',
+          message: 'An error occurred while updating an employee!\n' + e.message,
           status: ENotificationStatus['error'],
         }),
       );

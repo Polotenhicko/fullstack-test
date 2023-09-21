@@ -25,15 +25,21 @@ import {
   updateDepartment,
 } from 'store/slices/departmentSlice';
 import { ITablesColumnDef } from 'components/ModalAddRow/ModalAddRow';
+import { ConfirmForDelete } from 'components/ConfirmForDelete';
 
-export function DepartmentsTable() {
-  const departments = useAppSelector(({ departments }) => departments);
+interface IDepartmentTableProps {
+  employeesRef: React.RefObject<AgGridReact<any>>;
+}
+
+export function DepartmentsTable({ employeesRef }: IDepartmentTableProps) {
   const dispatch = useAppDispatch();
-  console.log(departments);
 
   const gridRef = useRef<AgGridReact>(null);
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const [isOpenConfirmForDelete, setIsOpenConfirmForDelete] = useState(false);
+  const confirmationText =
+    'When deleting departments, the associated employee department ID fields will become null.';
 
   const closeModalAddRow = () => {
     setIsOpenAddModal(false);
@@ -52,7 +58,6 @@ export function DepartmentsTable() {
       const { startRow, endRow, successCallback } = params;
       dispatch(fetchDepartments({ startRow, endRow })).then((result) => {
         const payload = result.payload as IFetchDepartmentsResult;
-        console.log(payload);
 
         const lastRow = payload.hasMore ? undefined : startRow + payload.departments.length;
 
@@ -90,7 +95,7 @@ export function DepartmentsTable() {
       field: 'managerId',
       cellDataType: 'number',
       customInfo: {
-        required: false,
+        required: true,
         inputType: 'number',
       },
     },
@@ -106,7 +111,7 @@ export function DepartmentsTable() {
       field: 'establishmentYear',
       cellDataType: 'number',
       customInfo: {
-        required: false,
+        required: true,
         inputType: 'number',
       },
     },
@@ -116,6 +121,7 @@ export function DepartmentsTable() {
     const fieldName = event.colDef.field;
 
     if (!fieldName) throw new Error('Does not have fieldName!');
+    if (!false) throw new Error('Does not have fieldName!');
 
     const oldData = { ...event.data, [fieldName]: event.oldValue };
 
@@ -147,14 +153,28 @@ export function DepartmentsTable() {
     });
   };
 
+  const handleCloseConfirmForDelete = () => {
+    setIsOpenConfirmForDelete(false);
+  };
+
+  const handleClickForDelete = () => {
+    const selectedNodes = gridRef.current!.api.getSelectedNodes();
+    if (!selectedNodes.length) return;
+
+    setIsOpenConfirmForDelete(true);
+  };
+
   const handleDelete = () => {
     const selectedNodes = gridRef.current!.api.getSelectedNodes();
     if (!selectedNodes.length) return;
+
+    gridRef.current!.api.deselectAll();
 
     const deletingIds = selectedNodes.map(({ data }: { data: IDepartment }) => data.departmentId);
     dispatch(deleteDepartments(deletingIds)).then(() => {
       dispatch(clearDepartments());
       gridRef.current!.api.refreshInfiniteCache();
+      employeesRef.current!.api.refreshInfiniteCache();
     });
   };
 
@@ -175,7 +195,7 @@ export function DepartmentsTable() {
         >
           Add row
         </Button>
-        <Button onClick={() => handleDelete()} variant="contained" disableElevation sx={{ color: '#fff' }}>
+        <Button onClick={handleClickForDelete} variant="contained" disableElevation sx={{ color: '#fff' }}>
           Delete rows
         </Button>
       </div>
@@ -193,7 +213,18 @@ export function DepartmentsTable() {
           rowSelection="multiple"
         />
       </div>
-      {isOpenAddModal && <ModalAddRow fields={columnDefs} onClose={closeModalAddRow} onInsert={handleInsert} />}
+      <ModalAddRow
+        fields={columnDefs}
+        onClose={closeModalAddRow}
+        onInsert={handleInsert}
+        isOpen={isOpenAddModal}
+      />
+      <ConfirmForDelete
+        isOpen={isOpenConfirmForDelete}
+        confirmationText={confirmationText}
+        onAgree={handleDelete}
+        onClose={handleCloseConfirmForDelete}
+      />
     </div>
   );
 }

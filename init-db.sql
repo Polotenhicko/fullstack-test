@@ -2,19 +2,19 @@
 CREATE TABLE Departments (
     department_id SERIAL PRIMARY KEY,
     department_name VARCHAR(255) NOT NULL,
-    manager_id INTEGER,
+    manager_id INTEGER NOT NULL,
     budget NUMERIC,
-    establishment_year INTEGER
+    establishment_year INTEGER NOT NULL
 );
 
 -- Создание таблицы "Сотрудники" (Employees)
 CREATE TABLE Employees (
     employee_id SERIAL PRIMARY KEY,
-    first_name VARCHAR(255),
-    last_name VARCHAR(255),
-    position VARCHAR(255),
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    position VARCHAR(255) NOT NULL,
     salary NUMERIC,
-    hire_date DATE,
+    hire_date DATE NOT NULL,
     department_id INTEGER,  -- Внешний ключ для связи с таблицей "Отделы"
     FOREIGN KEY (department_id) REFERENCES Departments(department_id)
 );

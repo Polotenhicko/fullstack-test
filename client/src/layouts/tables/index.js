@@ -30,8 +30,11 @@ import Footer from 'examples/Footer';
 import { EmployeesTable } from 'components/EmployeesTable';
 import { DepartmentsTable } from 'components/DepartmentsTable';
 import { Alerts } from 'components/Alerts';
+import { useRef } from 'react';
 
 function Tables() {
+  const employeesRef = useRef(null);
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -54,7 +57,7 @@ function Tables() {
                 </MDTypography>
               </MDBox>
               <MDBox pt={3}>
-                <EmployeesTable />
+                <EmployeesTable employeesRef={employeesRef} />
               </MDBox>
             </Card>
           </Grid>
@@ -75,7 +78,7 @@ function Tables() {
                 </MDTypography>
               </MDBox>
               <MDBox pt={3}>
-                <DepartmentsTable />
+                <DepartmentsTable employeesRef={employeesRef} />
               </MDBox>
             </Card>
           </Grid>

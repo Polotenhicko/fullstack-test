@@ -1,5 +1,4 @@
 import { useAppDispatch, useAppSelector } from 'store/store';
-import styles from './Alerts.module.css';
 import { useEffect } from 'react';
 import { removeNotification } from 'store/slices/notifycationsSlice';
 import { Alert, Snackbar } from '@mui/material';
@@ -9,7 +8,7 @@ export function Alerts() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const timeouts = notifications.map((notify) => setTimeout(() => dispatch(removeNotification(notify.id)), 2e3));
+    const timeouts = notifications.map((notify) => setTimeout(() => dispatch(removeNotification(notify.id)), 5e3));
 
     return () => {
       timeouts.forEach((timeout) => {
@@ -30,7 +29,7 @@ export function Alerts() {
             key={notification.id}
             onClose={() => handleClose(notification.id)}
             severity={notification.status}
-            style={{ marginBottom: '10px' }}
+            style={{ marginBottom: '10px', whiteSpace: 'pre-line' }}
           >
             {notification.message}
           </Alert>

@@ -26,12 +26,14 @@ import { useEffect, useRef, useState } from 'react';
 import { ModalAddRow } from '../ModalAddRow';
 import { ITablesColumnDef } from 'components/ModalAddRow/ModalAddRow';
 
-export function EmployeesTable() {
-  const employees = useAppSelector(({ employees }) => employees);
-  const dispatch = useAppDispatch();
-  console.log(employees);
+interface IEmployeesTableProps {
+  employeesRef: React.RefObject<AgGridReact<any>>;
+}
 
-  const gridRef = useRef<AgGridReact>(null);
+export function EmployeesTable({ employeesRef }: IEmployeesTableProps) {
+  const dispatch = useAppDispatch();
+
+  const gridRef = employeesRef;
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
 
@@ -52,7 +54,6 @@ export function EmployeesTable() {
       const { startRow, endRow, successCallback } = params;
       dispatch(fetchEmployees({ startRow, endRow })).then((result) => {
         const payload = result.payload as IFetchEmployeesResult;
-        console.log(payload);
 
         const lastRow = payload.hasMore ? undefined : startRow + payload.employees.length;
 
@@ -82,7 +83,7 @@ export function EmployeesTable() {
       field: 'firstName',
       cellDataType: 'text',
       customInfo: {
-        required: false,
+        required: true,
         inputType: 'text',
       },
     },
@@ -90,7 +91,7 @@ export function EmployeesTable() {
       field: 'lastName',
       cellDataType: 'text',
       customInfo: {
-        required: false,
+        required: true,
         inputType: 'text',
       },
     },
@@ -98,7 +99,7 @@ export function EmployeesTable() {
       field: 'position',
       cellDataType: 'text',
       customInfo: {
-        required: false,
+        required: true,
         inputType: 'text',
       },
     },
@@ -114,7 +115,7 @@ export function EmployeesTable() {
       field: 'hireDate',
       cellDataType: 'dateString',
       customInfo: {
-        required: false,
+        required: true,
         inputType: 'date',
       },
     },
@@ -129,19 +130,24 @@ export function EmployeesTable() {
   ];
 
   const onCellValueChanged = (event: CellValueChangedEvent<IEmployee>) => {
-    const employeeId = event.data.employeeId;
     const fieldName = event.colDef.field;
 
-    if (!fieldName) throw new Error('Doe not have fieldName!');
+    if (!fieldName) throw new Error('Does not have fieldName!');
+
+    const oldData = { ...event.data, [fieldName]: event.oldValue };
+
+    const employeeId = oldData.employeeId;
 
     dispatch(
       updateEmployee({
         employeeId,
         fields: {
-          [fieldName]: event.newValue,
+          [fieldName]: event.newValue === '' ? null : event.newValue,
         },
       }),
-    );
+    ).then(() => {
+      gridRef.current!.api.refreshInfiniteCache();
+    });
   };
 
   const defaultColDef: ColDef = {
@@ -163,6 +169,8 @@ export function EmployeesTable() {
   const handleDelete = () => {
     const selectedNodes = gridRef.current!.api.getSelectedNodes();
     if (!selectedNodes.length) return;
+
+    gridRef.current!.api.deselectAll();
 
     const deletingIds = selectedNodes.map(({ data }: { data: IEmployee }) => data.employeeId);
     dispatch(deleteEmployee(deletingIds)).then(() => {
@@ -206,7 +214,12 @@ export function EmployeesTable() {
           rowSelection="multiple"
         />
       </div>
-      {isOpenAddModal && <ModalAddRow fields={columnDefs} onClose={closeModalAddRow} onInsert={handleInsert} />}
+      <ModalAddRow
+        fields={columnDefs}
+        onClose={closeModalAddRow}
+        onInsert={handleInsert}
+        isOpen={isOpenAddModal}
+      />
     </div>
   );
 }

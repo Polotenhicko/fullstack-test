@@ -77,10 +77,10 @@ class DepartmentsController {
             const departmentId = req.params.departmentId;
             const updates = req.body;
             try {
-                // Найдем сотрудника, которого нужно удалить
+                // Найдем отдел, которого нужно обновить
                 const departmentToUpdate = await models_1.Departments.findByPk(departmentId);
                 if (!departmentToUpdate) {
-                    // Если сотрудник не найден, вернем 404 Not Found
+                    // Если отдел не найден, вернем 404 Not Found
                     res.status(404).json({
                         error: 'Отдел не найден',
                     });
@@ -98,16 +98,21 @@ class DepartmentsController {
         this.deleteOne = async (req, res) => {
             const departmentIdToDelete = req.params.departmentId;
             try {
-                // Найдем сотрудника, которого нужно удалить
+                // Найдем отдел, которого нужно удалить
                 const departmentToDelete = await models_1.Departments.findByPk(departmentIdToDelete);
                 if (!departmentToDelete) {
-                    // Если сотрудник не найден, вернем 404 Not Found
+                    // Если отдел не найден, вернем 404 Not Found
                     res.status(404).json({
                         error: 'Отдел не найден',
                     });
                     return;
                 }
-                // Удаление сотрудника
+                // Очищаем
+                await dbConnect_1.sequelize.query('UPDATE Employees SET department_id = null WHERE department_id = :departmentIdToDelete', {
+                    replacements: { departmentIdToDelete },
+                    type: sequelize_1.QueryTypes.UPDATE,
+                });
+                // Удаление отдел
                 await departmentToDelete.destroy();
                 res.status(204).send(); // Возвращаем статус 204 No Content после успешного удаления
             }

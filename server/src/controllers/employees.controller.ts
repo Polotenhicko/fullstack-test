@@ -92,7 +92,7 @@ export class EmployeesController {
     const updates = req.body;
 
     try {
-      // Найдем сотрудника, которого нужно удалить
+      // Найдем сотрудника, которого нужно обновить
       const employeeToUpdate = await Employees.findByPk(employeeId);
 
       if (!employeeToUpdate) {

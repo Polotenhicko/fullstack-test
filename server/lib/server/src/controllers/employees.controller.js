@@ -81,7 +81,7 @@ class EmployeesController {
             const employeeId = req.params.employeeId;
             const updates = req.body;
             try {
-                // Найдем сотрудника, которого нужно удалить
+                // Найдем сотрудника, которого нужно обновить
                 const employeeToUpdate = await models_1.Employees.findByPk(employeeId);
                 if (!employeeToUpdate) {
                     // Если сотрудник не найден, вернем 404 Not Found
