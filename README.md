@@ -56,6 +56,8 @@
 ## Дополнительная информация
 
 - **Время, затраченное на разработку:** Примерно 50 часов.
+- **Версия с TypeScript:** [https://github.com/Polotenhicko/fullstack-test](https://github.com/Polotenhicko/fullstack-test)
+- **Версия без TypeScript:** [https://github.com/Polotenhicko/fullstack-test/tree/no-ts](https://github.com/Polotenhicko/fullstack-test/tree/no-ts)
 
 ## Деплой
 
