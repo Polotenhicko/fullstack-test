@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import notificationService from 'store/services/notifications.service';
 
 export enum ENotificationStatus {
   'success' = 'success',
@@ -13,31 +14,23 @@ export interface INotification {
   status: ENotificationStatus; // Используйте тип-перечисление здесь
 }
 
+interface IAddNotification {
+  id?: INotification['id'];
+  message: INotification['message'];
+  status: ENotificationStatus;
+}
+
 const initialState: INotification[] = [];
 
 const notificationsSlice = createSlice({
   name: 'notifications',
   initialState,
   reducers: {
-    addInfoNotification: (state, action: PayloadAction<INotification['message']>) => {
+    addNotification: (state, action: PayloadAction<IAddNotification>) => {
       state.push({
-        id: new Date().getTime(),
-        message: action.payload,
-        status: ENotificationStatus['info'],
-      });
-    },
-    addSuccessNotification: (state, action: PayloadAction<INotification['message']>) => {
-      state.push({
-        id: new Date().getTime(),
-        message: action.payload,
-        status: ENotificationStatus['success'],
-      });
-    },
-    addErrorNotification: (state, action: PayloadAction<INotification['message']>) => {
-      state.push({
-        id: new Date().getTime(),
-        message: action.payload,
-        status: ENotificationStatus['error'],
+        id: action.payload.id ?? notificationService.maxId,
+        message: action.payload.message,
+        status: action.payload.status,
       });
     },
     removeNotification: (state, action: PayloadAction<INotification['id']>) => {
@@ -46,6 +39,5 @@ const notificationsSlice = createSlice({
   },
 });
 
-export const { addErrorNotification, addInfoNotification, addSuccessNotification, removeNotification } =
-  notificationsSlice.actions;
+export const { addNotification, removeNotification } = notificationsSlice.actions;
 export default notificationsSlice.reducer;

@@ -7,14 +7,27 @@ const sequelize_1 = require("sequelize");
 class DepartmentsController {
     constructor() {
         this.create = async (req, res) => {
+            const { departmentId, departmentName, managerId, budget, establishmentYear } = req.body;
             try {
-                const newDepartment = await models_1.Departments.create(req.body);
+                const hasDepartmentByPK = await models_1.Departments.findByPk(departmentId);
+                if (hasDepartmentByPK) {
+                    throw new Error(`department_id ${departmentId} has ready exist!`);
+                }
+                const maxDepartmentId = (await models_1.Departments.max('departmentId'));
+                // Если есть записи в таблице Departments, увеличиваем максимальное значение на 1, иначе начинаем с 1
+                const nextDepartmentId = maxDepartmentId ? maxDepartmentId + 1 : 1;
+                const newDepartment = await models_1.Departments.create({
+                    departmentId: nextDepartmentId,
+                    departmentName,
+                    managerId,
+                    budget,
+                    establishmentYear,
+                });
                 res.status(201).json(newDepartment);
             }
             catch (e) {
                 res.status(500).json({
-                    error: true,
-                    message: e.message,
+                    error: e.message,
                 });
             }
         };
@@ -46,8 +59,8 @@ class DepartmentsController {
                     type: sequelize_1.QueryTypes.SELECT,
                     replacements: { limitNum, offsetNum },
                 });
-                departments.forEach((employee) => {
-                    employee.budget = Number(employee.budget);
+                departments.forEach((department) => {
+                    department.budget = Number(department.budget);
                 });
                 const count = await models_1.Departments.count();
                 const hasMore = limitNum + offsetNum < count;
@@ -55,8 +68,7 @@ class DepartmentsController {
             }
             catch (e) {
                 res.status(500).json({
-                    error: true,
-                    message: e.message,
+                    error: e.message,
                 });
             }
         };
@@ -75,7 +87,7 @@ class DepartmentsController {
                     return;
                 }
                 await departmentToUpdate.update(updates);
-                res.status(200).json({ employee: departmentToUpdate });
+                res.status(200).json({ department: departmentToUpdate });
             }
             catch (e) {
                 res.status(500).json({

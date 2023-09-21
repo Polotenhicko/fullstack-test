@@ -23,6 +23,8 @@ interface IHeaders {
 export class FetchService {
   private request: Request;
   private abortController: AbortController;
+  private minDelay: number = 1e3;
+  private minWaitTimeout?: NodeJS.Timeout;
 
   constructor({ body, method, routeInfo, abortController }: IFetchServiceConstructor) {
     this.abortController = abortController ?? new AbortController();
@@ -30,14 +32,22 @@ export class FetchService {
     this.request = this.buildRequest({ body, method, routeInfo, signal: this.abortController.signal });
   }
 
-  public async sendRequest<T>(): Promise<T> {
+  public async sendRequest<T>(requiredMinDelay = false): Promise<T> {
+    const fetchStartTime = Date.now();
     const response = await fetch(this.request);
-    const result = await response.json();
+
+    const result = await this.checkResponse(response);
+
+    if (requiredMinDelay) {
+      await this.waitMinDelay(fetchStartTime);
+    }
+
     return result;
   }
 
   public clearFetch() {
     this.abortController.abort();
+    clearTimeout(this.minWaitTimeout);
   }
 
   private buildRequest({ body, method, routeInfo, signal }: IFetchServiceRequest): Request {
@@ -88,5 +98,25 @@ export class FetchService {
     }
 
     return headers;
+  }
+
+  private async checkResponse(res: Response): Promise<any> {
+    if (res.status === 500) {
+      const errorData = await res.json();
+      throw new Error(`Server Error: ${errorData.error}`);
+    } else if (res.status === 204) {
+      return 'No Content';
+    } else if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(`Request Error: ${errorData.error}`);
+    }
+
+    const result = await res.json();
+    return result;
+  }
+
+  private async waitMinDelay(fetchStartTime = Date.now()) {
+    const timeLeft = this.minDelay - (Date.now() - fetchStartTime);
+    await new Promise<void>((res) => (this.minWaitTimeout = setTimeout(() => res(), timeLeft)));
   }
 }

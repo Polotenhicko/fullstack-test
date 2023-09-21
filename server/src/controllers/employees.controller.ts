@@ -32,8 +32,7 @@ export class EmployeesController {
       res.status(201).json(newEmployee);
     } catch (e: any) {
       res.status(500).json({
-        error: true,
-        message: e.message,
+        error: e.message,
       });
     }
   };
@@ -81,8 +80,7 @@ export class EmployeesController {
       res.json({ employees, hasMore });
     } catch (e: any) {
       res.status(500).json({
-        error: true,
-        message: e.message,
+        error: e.message,
       });
     }
   };

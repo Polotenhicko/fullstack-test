@@ -8,6 +8,6 @@ exports.departmentsRouter = departmentsRouter;
 const departmentsController = new controllers_1.DepartmentsController();
 departmentsRouter.get('/departments', departmentsController.findAll);
 departmentsRouter.post('/departments', departmentsController.create);
-departmentsRouter.delete('/departments/:employeeId', departmentsController.deleteOne);
-departmentsRouter.patch('/departments/:employeeId', departmentsController.update);
+departmentsRouter.delete('/departments/:departmentId', departmentsController.deleteOne);
+departmentsRouter.patch('/departments/:departmentId', departmentsController.update);
 //# sourceMappingURL=departments.route.js.map

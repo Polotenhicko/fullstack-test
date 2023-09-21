@@ -7,10 +7,17 @@ const sequelize_1 = require("sequelize");
 class EmployeesController {
     constructor() {
         this.create = async (req, res) => {
+            const { employeeId, firstName, lastName, position, salary, hireDate, departmentId } = req.body;
             try {
-                const { employeeId, firstName, lastName, position, salary, hireDate, departmentId } = req.body;
+                const hasEmployeeByPK = await models_1.Employees.findByPk(employeeId);
+                if (hasEmployeeByPK) {
+                    throw new Error(`employee_id ${employeeId} has ready exist!`);
+                }
+                const maxEmployeeId = (await models_1.Employees.max('employeeId'));
+                // Если есть записи в таблице Departments, увеличиваем максимальное значение на 1, иначе начинаем с 1
+                const nextEmployeeId = maxEmployeeId ? maxEmployeeId + 1 : 1;
                 const newEmployee = await models_1.Employees.create({
-                    employeeId,
+                    employeeId: nextEmployeeId,
                     firstName,
                     lastName,
                     position,
@@ -22,8 +29,7 @@ class EmployeesController {
             }
             catch (e) {
                 res.status(500).json({
-                    error: true,
-                    message: e.message,
+                    error: e.message,
                 });
             }
         };
@@ -66,8 +72,7 @@ class EmployeesController {
             }
             catch (e) {
                 res.status(500).json({
-                    error: true,
-                    message: e.message,
+                    error: e.message,
                 });
             }
         };

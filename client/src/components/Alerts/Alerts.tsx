@@ -7,7 +7,16 @@ import { Alert, Snackbar } from '@mui/material';
 export function Alerts() {
   const notifications = useAppSelector((state) => state.notifications); // Замените на ваш срез уведомлений
   const dispatch = useAppDispatch();
-  console.log(notifications);
+
+  useEffect(() => {
+    const timeouts = notifications.map((notify) => setTimeout(() => dispatch(removeNotification(notify.id)), 2e3));
+
+    return () => {
+      timeouts.forEach((timeout) => {
+        clearTimeout(timeout);
+      });
+    };
+  }, [dispatch, notifications]);
 
   const handleClose = (id: number) => {
     dispatch(removeNotification(id));

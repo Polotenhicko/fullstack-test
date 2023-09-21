@@ -10,12 +10,20 @@ interface IAddRowInputProps {
 
 export function AddRowInput({ field, onChange }: IAddRowInputProps) {
   const id = useId();
-  const type = field.customInfo?.inputType;
+  const type = field.customInfo.inputType;
+  const required = field.customInfo.required;
 
   return (
     <div className={styles.addRowInput}>
       <label htmlFor={id}>{field.field}</label>
-      <Input id={id} name={field.field} placeholder={field.field} type={type} onChange={onChange} />
+      <Input
+        id={id}
+        name={field.field}
+        required={required}
+        placeholder={field.field}
+        type={type}
+        onChange={onChange}
+      />
     </div>
   );
 }

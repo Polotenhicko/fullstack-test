@@ -1,7 +1,7 @@
 import { AgGridReact } from 'ag-grid-react';
 import styles from './EmployeesTable.module.css';
 import {
-  TFetchEmployeesResult,
+  IFetchEmployeesResult,
   clearEmployees,
   createEmployee,
   deleteEmployee,
@@ -52,7 +52,7 @@ export function EmployeesTable() {
     getRows(params) {
       const { startRow, endRow, successCallback } = params;
       dispatch(fetchEmployees({ startRow, endRow })).then((result) => {
-        const payload = result.payload as TFetchEmployeesResult;
+        const payload = result.payload as IFetchEmployeesResult;
         console.log(payload);
 
         const lastRow = payload.hasMore ? undefined : startRow + payload.employees.length;
@@ -73,13 +73,60 @@ export function EmployeesTable() {
         }
       },
       cellDataType: 'number',
+      editable: false,
+      customInfo: {
+        required: false,
+        inputType: 'number',
+      },
     },
-    { field: 'firstName', cellDataType: 'text' },
-    { field: 'lastName', cellDataType: 'text' },
-    { field: 'position', cellDataType: 'text' },
-    { field: 'salary', cellDataType: 'number' },
-    { field: 'hireDate', cellDataType: 'dateString' },
-    { field: 'departmentId', cellDataType: 'number' },
+    {
+      field: 'firstName',
+      cellDataType: 'text',
+      customInfo: {
+        required: false,
+        inputType: 'text',
+      },
+    },
+    {
+      field: 'lastName',
+      cellDataType: 'text',
+      customInfo: {
+        required: false,
+        inputType: 'text',
+      },
+    },
+    {
+      field: 'position',
+      cellDataType: 'text',
+      customInfo: {
+        required: false,
+        inputType: 'text',
+      },
+    },
+    {
+      field: 'salary',
+      cellDataType: 'number',
+      customInfo: {
+        required: false,
+        inputType: 'number',
+      },
+    },
+    {
+      field: 'hireDate',
+      cellDataType: 'dateString',
+      customInfo: {
+        required: false,
+        inputType: 'date',
+      },
+    },
+    {
+      field: 'departmentId',
+      cellDataType: 'number',
+      customInfo: {
+        required: false,
+        inputType: 'number',
+      },
+    },
   ];
 
   const onCellValueChanged = (event: CellValueChangedEvent<IEmployee>) => {

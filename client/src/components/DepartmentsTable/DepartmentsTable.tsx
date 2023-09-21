@@ -71,6 +71,7 @@ export function DepartmentsTable() {
         }
       },
       cellDataType: 'number',
+      editable: false,
       customInfo: {
         required: false,
         inputType: 'number',
@@ -111,10 +112,13 @@ export function DepartmentsTable() {
   ];
 
   const onCellValueChanged = (event: CellValueChangedEvent<IDepartment>) => {
-    const departmentId = event.data.departmentId;
     const fieldName = event.colDef.field;
 
-    if (!fieldName) throw new Error('Doe not have fieldName!');
+    if (!fieldName) throw new Error('Does not have fieldName!');
+
+    const oldData = { ...event.data, [fieldName]: event.oldValue };
+
+    const departmentId = oldData.departmentId;
 
     dispatch(
       updateDepartment({

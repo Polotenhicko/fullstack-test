@@ -31,8 +31,7 @@ export class DepartmentsController {
       res.status(201).json(newDepartment);
     } catch (e: any) {
       res.status(500).json({
-        error: true,
-        message: e.message,
+        error: e.message,
       });
     }
   };
@@ -78,8 +77,7 @@ export class DepartmentsController {
       res.json({ departments, hasMore });
     } catch (e: any) {
       res.status(500).json({
-        error: true,
-        message: e.message,
+        error: e.message,
       });
     }
   };

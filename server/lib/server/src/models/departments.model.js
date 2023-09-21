@@ -4,23 +4,28 @@ exports.Departments = void 0;
 const sequelize_1 = require("sequelize");
 const dbConnect_1 = require("./dbConnect");
 exports.Departments = dbConnect_1.sequelize.define('Department', {
-    department_id: {
+    departmentId: {
         type: sequelize_1.DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
+        field: 'department_id',
     },
-    department_name: {
+    departmentName: {
         type: sequelize_1.DataTypes.STRING(255),
         allowNull: false,
+        field: 'department_name',
     },
-    manager_id: {
+    managerId: {
         type: sequelize_1.DataTypes.INTEGER,
+        field: 'manager_id',
     },
     budget: {
         type: sequelize_1.DataTypes.NUMBER,
+        field: 'budget',
     },
-    establishment_year: {
+    establishmentYear: {
         type: sequelize_1.DataTypes.INTEGER,
+        field: 'establishment_year',
     },
 }, {
     tableName: 'departments',
