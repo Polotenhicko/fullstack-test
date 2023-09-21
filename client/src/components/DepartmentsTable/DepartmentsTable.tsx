@@ -121,7 +121,6 @@ export function DepartmentsTable({ employeesRef }: IDepartmentTableProps) {
     const fieldName = event.colDef.field;
 
     if (!fieldName) throw new Error('Does not have fieldName!');
-    if (!false) throw new Error('Does not have fieldName!');
 
     const oldData = { ...event.data, [fieldName]: event.oldValue };
 
