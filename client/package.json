@@ -38,7 +38,8 @@
     "dev": "concurrently \"npm start\" \"cd ./../server && npm run dev\"",
     "component": "node ./scripts/createComponentPattern.js",
     "deploy": "npm run build && gh-pages -d build",
-    "pretty": "prettier --write \"./**/*.ts\""
+    "pretty": "prettier --write \"./**/*.ts\"",
+    "install:clean": "rmdir /s /q node_modules && del package-lock.json && npm install"
   },
   "eslintConfig": {
     "extends": [

@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node ./lib/server/src/index.js",
-    "dev": "set NODE_ENV=development&& nodemon src/index.ts"
+    "dev": "set NODE_ENV=development&& nodemon src/index.ts",
+    "install:clean": "rmdir /s /q node_modules && del package-lock.json && npm install"
   },
   "engines": {
     "node": "16"
