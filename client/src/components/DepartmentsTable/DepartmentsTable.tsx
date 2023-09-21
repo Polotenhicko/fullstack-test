@@ -8,6 +8,7 @@ import { DEFAULT_LIMIT } from '../../constants/tables';
 import {
   CellValueChangedEvent,
   ColDef,
+  GridOptions,
   GridReadyEvent,
   IDatasource,
   ValueFormatterParams,
@@ -157,6 +158,12 @@ export function DepartmentsTable() {
     });
   };
 
+  const rowStyle: GridOptions = {
+    getRowStyle() {
+      return { background: '#fff' };
+    },
+  };
+
   return (
     <div>
       <div className={styles.controlBar}>
@@ -179,6 +186,7 @@ export function DepartmentsTable() {
           defaultColDef={defaultColDef}
           cacheBlockSize={DEFAULT_LIMIT}
           maxBlocksInCache={DEFAULT_LIMIT}
+          gridOptions={rowStyle}
           onCellValueChanged={onCellValueChanged}
           onGridReady={onGridReady}
           rowModelType="infinite"

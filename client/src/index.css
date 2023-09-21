@@ -1,0 +1,11 @@
+.ag-root {
+  font-family: Roboto, sans-serif;
+}
+
+.ag-root-wrapper {
+  border-radius: 0 0 12px 12px;
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+}

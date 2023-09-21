@@ -16,6 +16,7 @@ import { DEFAULT_LIMIT } from '../../constants/tables';
 import {
   CellValueChangedEvent,
   ColDef,
+  GridOptions,
   GridReadyEvent,
   IDatasource,
   ValueFormatterParams,
@@ -24,8 +25,6 @@ import Button from '@mui/material/Button';
 import { useEffect, useRef, useState } from 'react';
 import { ModalAddRow } from '../ModalAddRow';
 import { ITablesColumnDef } from 'components/ModalAddRow/ModalAddRow';
-import MDAlert from 'components/MDAlert';
-import MDSnackbar from 'components/MDSnackbar';
 
 export function EmployeesTable() {
   const employees = useAppSelector(({ employees }) => employees);
@@ -172,6 +171,12 @@ export function EmployeesTable() {
     });
   };
 
+  const rowStyle: GridOptions = {
+    getRowStyle() {
+      return { background: '#fff' };
+    },
+  };
+
   return (
     <div>
       <div className={styles.controlBar}>
@@ -194,6 +199,7 @@ export function EmployeesTable() {
           defaultColDef={defaultColDef}
           cacheBlockSize={DEFAULT_LIMIT}
           maxBlocksInCache={DEFAULT_LIMIT}
+          gridOptions={rowStyle}
           onCellValueChanged={onCellValueChanged}
           onGridReady={onGridReady}
           rowModelType="infinite"
