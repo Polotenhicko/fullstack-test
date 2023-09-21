@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/fullstack-test/static/css/main.20b8247b.css",
-    "main.js": "/fullstack-test/static/js/main.87b79485.js",
+    "main.css": "/fullstack-test/static/css/main.6d9264aa.css",
+    "main.js": "/fullstack-test/static/js/main.57e7968d.js",
     "static/media/pattern-tree.svg": "/fullstack-test/static/media/pattern-tree.431da656681abcdffac51bee04d7f581.svg",
     "static/media/home-decor-3.jpg": "/fullstack-test/static/media/home-decor-3.74d13fcbd3c631fc7908.jpg",
     "static/media/home-decor-2.jpg": "/fullstack-test/static/media/home-decor-2.b4e5397c9846645ba275.jpg",
@@ -27,11 +27,11 @@
     "static/media/logo-jira.svg": "/fullstack-test/static/media/logo-jira.f9c1ddbe3e751a29bd16580977ade064.svg",
     "static/media/logo-atlassian.svg": "/fullstack-test/static/media/logo-atlassian.d92c4f81bb3efbf288b3ef71ce2fbfb0.svg",
     "index.html": "/fullstack-test/index.html",
-    "main.20b8247b.css.map": "/fullstack-test/static/css/main.20b8247b.css.map",
-    "main.87b79485.js.map": "/fullstack-test/static/js/main.87b79485.js.map"
+    "main.6d9264aa.css.map": "/fullstack-test/static/css/main.6d9264aa.css.map",
+    "main.57e7968d.js.map": "/fullstack-test/static/js/main.57e7968d.js.map"
   },
   "entrypoints": [
-    "static/css/main.20b8247b.css",
-    "static/js/main.87b79485.js"
+    "static/css/main.6d9264aa.css",
+    "static/js/main.57e7968d.js"
   ]
 }
